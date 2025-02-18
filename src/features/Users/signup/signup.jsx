@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { userSignupThunk } from "../redux/user.redux";
 
@@ -9,6 +9,7 @@ export default function Signup() {
   const [error, setError] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const isDark = useSelector((state) => state.theme.isDark);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -21,7 +22,6 @@ export default function Signup() {
     setError("");
 
     const result = await dispatch(userSignupThunk(user));
-    console.log(result);
 
     if (result) {
       navigate("/");
@@ -29,8 +29,16 @@ export default function Signup() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-800 text-white">
-      <div className="w-full max-w-sm p-6 bg-gray-900 rounded-lg shadow-md">
+    <div
+      className={`flex justify-center items-center min-h-screen ${
+        isDark ? "bg-gray-800 text-white" : "bg-gray-200 text-gray-900"
+      }`}
+    >
+      <div
+        className={`w-full max-w-sm p-6 rounded-lg shadow-md ${
+          isDark ? "bg-gray-900" : "bg-white"
+        }`}
+      >
         <h1 className="text-3xl font-bold text-center mb-6">Signup</h1>
         <form className="space-y-4" onSubmit={handleSubmit}>
           {error && <p className="text-red-500 text-sm">{error}</p>}
@@ -40,7 +48,11 @@ export default function Signup() {
             value={user.email}
             required
             onChange={(e) => setUser({ ...user, email: e.target.value })}
-            className="w-full p-3 bg-gray-700 text-white rounded-md border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={`w-full p-3 rounded-md border focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+              isDark
+                ? "bg-gray-700 text-white border-gray-600"
+                : "bg-gray-100 text-gray-900 border-gray-300"
+            }`}
           />
           <input
             type="text"
@@ -48,7 +60,11 @@ export default function Signup() {
             value={user.name}
             required
             onChange={(e) => setUser({ ...user, name: e.target.value })}
-            className="w-full p-3 bg-gray-700 text-white rounded-md border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={`w-full p-3 rounded-md border focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+              isDark
+                ? "bg-gray-700 text-white border-gray-600"
+                : "bg-gray-100 text-gray-900 border-gray-300"
+            }`}
           />
           <input
             type="password"
@@ -56,7 +72,11 @@ export default function Signup() {
             value={user.password}
             required
             onChange={(e) => setUser({ ...user, password: e.target.value })}
-            className="w-full p-3 bg-gray-700 text-white rounded-md border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={`w-full p-3 rounded-md border focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+              isDark
+                ? "bg-gray-700 text-white border-gray-600"
+                : "bg-gray-100 text-gray-900 border-gray-300"
+            }`}
           />
           <input
             type="password"
@@ -64,7 +84,11 @@ export default function Signup() {
             required
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            className="w-full p-3 bg-gray-700 text-white rounded-md border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={`w-full p-3 rounded-md border focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+              isDark
+                ? "bg-gray-700 text-white border-gray-600"
+                : "bg-gray-100 text-gray-900 border-gray-300"
+            }`}
           />
           <button
             type="submit"
@@ -73,7 +97,7 @@ export default function Signup() {
             Signup
           </button>
           <Link
-            to="/login"
+            to="/signin"
             className="text-sm text-center block text-blue-400 hover:text-blue-500"
           >
             <h4>Already have an account? Login</h4>

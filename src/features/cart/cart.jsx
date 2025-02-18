@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function Cart() {
   const cart = useSelector((state) => state.products.cart || []);
+  const isDark = useSelector((state) => state.theme.isDark);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -16,7 +17,11 @@ export default function Cart() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-800 text-white p-6">
+    <div
+      className={`min-h-screen ${
+        isDark ? "bg-gray-900 text-white" : "bg-white text-gray-900"
+      } p-6`}
+    >
       <h1 className="text-3xl font-bold text-center mb-6">Your Cart</h1>
 
       {cart.length === 0 ? (
@@ -28,9 +33,15 @@ export default function Cart() {
           {cart.map((item) => (
             <div
               key={item.id}
-              className="bg-gray-900 p-4 rounded-lg shadow-lg hover:scale-105 transition-transform"
+              className={`p-4 rounded-lg shadow-lg hover:scale-105 transition-transform ${
+                isDark ? "bg-gray-800" : "bg-gray-100"
+              }`}
             >
-              <div className="h-40 flex justify-center items-center bg-gray-700 rounded-lg">
+              <div
+                className={`h-40 flex justify-center items-center rounded-lg ${
+                  isDark ? "bg-gray-700" : "bg-gray-300"
+                }`}
+              >
                 <img className="h-32 w-auto" src={item.img} alt={item.name} />
               </div>
               <h2 className="text-lg font-semibold mt-2">{item.name}</h2>
@@ -48,7 +59,7 @@ export default function Cart() {
 
       <div className="flex justify-center mt-6">
         <button
-          onClick={() => handlePurchase()}
+          onClick={handlePurchase}
           className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-500 transition"
         >
           Purchase

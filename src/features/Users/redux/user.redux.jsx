@@ -4,8 +4,9 @@ import { db } from "../../../firebase.config/firebase.config";
 
 const initialState = {
   isAuthenticated: false,
-  error: null,
+  data: null,
   loading: false,
+  error: null,
 };
 
 export const userAsyncThunk = createAsyncThunk(
@@ -23,10 +24,12 @@ export const userAsyncThunk = createAsyncThunk(
         return thunkAPI.rejectWithValue("Invalid Credentials");
       }
       const user = querySnapshot.docs[0].data();
+      console.log(user);
+
       return user;
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        "Something went wrong. Please try again."
+        error.response?.data?.message || "Login failed"
       );
     }
   }
@@ -49,8 +52,9 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     logout: (state) => {
-      state.isAuthenticated = false;
+      return { ...initialState };
     },
+    resetState: () => initialState,
   },
   extraReducers: (builder) => {
     builder
@@ -61,11 +65,11 @@ const userSlice = createSlice({
       .addCase(userAsyncThunk.fulfilled, (state, action) => {
         state.loading = false;
         state.isAuthenticated = true;
-        state.user = action.payload;
+        state.data = action.payload;
       })
       .addCase(userAsyncThunk.rejected, (state, action) => {
         state.isAuthenticated = false;
-        state.error = true;
+        state.error = action.payload || "Invalid credentials";
       })
       .addCase(userSignupThunk.pending, (state, action) => {
         state.loading = true;
@@ -74,10 +78,12 @@ const userSlice = createSlice({
         state.isAuthenticated = true;
       })
       .addCase(userSignupThunk.rejected, (state, action) => {
-        state.error = false;
+        state.error = action.payload || "Signup failed";
       });
   },
 });
 
-export const userReducers = userSlice.reducer;
+export default userSlice.reducer;
+
+export const { logout, resetState } = userSlice.actions;
 export const userSelector = (state) => state.users;

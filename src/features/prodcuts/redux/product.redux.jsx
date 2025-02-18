@@ -104,12 +104,14 @@ const productSlice = createSlice({
         state.cart.push(action.payload);
       }
     },
+    resetCart: (state) => {
+      return initialState;
+    },
     removeFromCart: (state, action) => {
       state.cart = state.cart.filter((item) => item.id !== action.payload);
     },
     orders: (state) => {
       state.orders = [...state.orders, ...state.cart];
-      console.log("state", state.orders);
 
       state.cart = [];
     },

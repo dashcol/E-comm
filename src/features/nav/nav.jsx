@@ -1,9 +1,36 @@
 import { NavLink, Outlet } from "react-router-dom";
+import { logout, userSelector } from "../Users/redux/user.redux";
+import { useDispatch, useSelector } from "react-redux";
+import SideBar from "../sidebar/sidebar";
+import { useState } from "react";
+import ProtectedRoute from "../protect/protect";
+import { persistor } from "../../store/store";
+import { productActions } from "../prodcuts/redux/product.redux";
 
 export default function NavBar() {
+  const isDark = useSelector((state) => state.theme.isDark);
+  const user = useSelector(userSelector) || { isAuthenticated: false };
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const { isAuthenticated } = user;
+
+  const dispatch = useDispatch();
+
+  const handleClick = async () => {
+    try {
+      dispatch(logout());
+      dispatch(productActions.resetCart());
+      await persistor.purge();
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
+
   return (
     <>
-      <div className="fixed top-0 left-0 w-full flex justify-between items-center p-4 bg-gray-900 bg-opacity-75 text-white z-10">
+      <div
+        className={`fixed top-0 left-0 w-full flex justify-between items-center p-4 z-10 transition-all duration-300
+          ${isDark ? "bg-gray-900 text-white" : "bg-blue-300 text-black"}`}
+      >
         <div className="flex space-x-4">
           <NavLink to="/" className="text-lg font-medium hover:text-gray-300">
             Home
@@ -29,18 +56,36 @@ export default function NavBar() {
         </div>
 
         <div className="flex space-x-4">
-          <img
-            className="h-6 w-6 hover:text-gray-400"
-            alt="settings"
-            src="https://cdn-icons-png.flaticon.com/128/2040/2040504.png"
-          />
+          {isAuthenticated ? (
+            <img
+              alt="logout"
+              src="https://cdn-icons-png.flaticon.com/128/14018/14018685.png"
+              className="h-6 w-6"
+              onClick={handleClick}
+            />
+          ) : (
+            <NavLink to="/signin">
+              <img
+                alt="user"
+                src="https://cdn-icons-png.flaticon.com/128/95/95461.png"
+                className="h-10 w-10"
+              />
+            </NavLink>
+          )}
           <img
             className="h-6 w-6 hover:text-gray-400"
             alt="sidebar"
             src="https://cdn-icons-png.flaticon.com/128/8166/8166618.png"
+            onClick={() => setIsSidebarOpen(true)}
           />
         </div>
       </div>
+      <ProtectedRoute>
+        <SideBar
+          isOpen={isSidebarOpen}
+          onClose={() => setIsSidebarOpen(false)}
+        ></SideBar>
+      </ProtectedRoute>
       <Outlet />
     </>
   );

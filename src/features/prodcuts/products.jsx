@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 
 export default function Products() {
   const data = useSelector(productSelector);
+  const isDark = useSelector((state) => state.theme.isDark);
   const dispatch = useDispatch();
   const [search, setSearch] = useState("");
   const [price, setPrice] = useState(3000);
@@ -39,19 +40,28 @@ export default function Products() {
   const addToCart = (product) => {
     dispatch(productActions.addTocart(product));
   };
+
   return (
-    <div className="min-h-screen bg-gray-800 text-white p-6">
+    <div
+      className={`min-h-screen p-6 transition-all duration-300 ${
+        isDark ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"
+      }`}
+    >
       {/* Search Box */}
       <div className="flex justify-center mb-6">
-        <div className="flex items-center bg-gray-700 rounded-lg px-4 py-2 w-full max-w-md">
+        <div
+          className={`flex items-center rounded-lg px-4 py-2 w-full max-w-md ${
+            isDark ? "bg-gray-800" : "bg-white border border-gray-300"
+          }`}
+        >
           <input
-            className="bg-transparent flex-1 outline-none text-white placeholder-gray-400"
+            className="bg-transparent flex-1 outline-none placeholder-gray-400"
             placeholder="Search here..."
             onChange={(e) => setSearch(e.target.value)}
           />
           <img
             onClick={handleSearch}
-            className="w-6 h-6 ml-2"
+            className="w-6 h-6 ml-2 cursor-pointer"
             alt="search"
             src="https://cdn-icons-png.flaticon.com/128/18574/18574282.png"
           />
@@ -59,19 +69,18 @@ export default function Products() {
       </div>
 
       <div className="flex gap-6">
-        {/* Sidebar Filters */}
-        <div className="w-1/4 bg-gray-900 p-4 rounded-lg shadow-md">
+        <div
+          className={`w-1/4 p-4 rounded-lg shadow-md ${
+            isDark ? "bg-gray-800" : "bg-white border border-gray-300"
+          }`}
+        >
           <h1 className="text-xl font-bold mb-4">Filters</h1>
 
-          {/* Filter by Price */}
           <div className="mb-6">
             <h5 className="font-semibold">Filter By Price</h5>
-            <div className="flex justify-between text-gray-300">
-              <span id="max-price">Max:${price}</span>
-            </div>
+            <span className="block text-gray-400">Max: ${price}</span>
             <input
               type="range"
-              id="range-slider"
               min="0"
               max="3000"
               step="100"
@@ -81,22 +90,21 @@ export default function Products() {
             />
           </div>
 
-          {/* Filter by Category */}
           <div>
             <h5 className="font-semibold">Category</h5>
-            <ul className="space-y-2 mt-2 text-gray-300">
+            <ul className="space-y-2 mt-2">
               {["Electronics", "Home Appliances", "Clothing", "Others"].map(
-                (category, index) => (
+                (cat, index) => (
                   <li key={index} className="flex items-center">
                     <input
                       type="radio"
                       name="category"
-                      value={category}
+                      value={cat}
                       onChange={handleCategoryChange}
-                      id={category.toLowerCase()}
+                      id={cat.toLowerCase()}
                       className="mr-2"
                     />
-                    <label htmlFor={category.toLowerCase()}>{category}</label>
+                    <label htmlFor={cat.toLowerCase()}>{cat}</label>
                   </li>
                 )
               )}
@@ -109,9 +117,15 @@ export default function Products() {
           {data.map((product, index) => (
             <div
               key={index}
-              className="bg-gray-900 p-4 rounded-lg shadow-lg hover:scale-105 transition-transform"
+              className={`p-4 rounded-lg shadow-lg hover:scale-105 transition-transform ${
+                isDark ? "bg-gray-800" : "bg-white border border-gray-300"
+              }`}
             >
-              <div className="h-40 flex justify-center items-center bg-gray-700 rounded-lg">
+              <div
+                className={`h-40 flex justify-center items-center rounded-lg ${
+                  isDark ? "bg-gray-700" : "bg-gray-200"
+                }`}
+              >
                 <img
                   className="h-32 w-auto"
                   alt={product.name}
@@ -123,7 +137,11 @@ export default function Products() {
 
               <button
                 onClick={() => addToCart(product)}
-                className="w-full mt-4 bg-blue-600 text-white py-2 rounded-md hover:bg-blue-500 transition"
+                className={`w-full mt-4 py-2 rounded-md transition ${
+                  isDark
+                    ? "bg-blue-600 hover:bg-blue-500"
+                    : "bg-blue-500 hover:bg-blue-400"
+                }`}
               >
                 Add to Cart
               </button>
