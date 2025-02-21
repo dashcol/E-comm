@@ -2,11 +2,10 @@ import { useSelector } from "react-redux";
 
 export default function Order() {
   const orders = useSelector((state) => state.products.orders || []);
-  console.log(orders);
 
   return (
-    <div className="min-h-screen bg-gray-800 text-white p-6">
-      <div className="max-w-3xl mx-auto bg-gray-900 p-6 rounded-lg shadow-lg">
+    <div className="flex justify-center items-center min-h-screen bg-gray-800 text-white p-6 mt-16">
+      <div className=" mt-4 max-w-3xl  bg-gray-900 p-6 rounded-lg shadow-lg">
         <h1 className="text-2xl font-bold mb-4 text-center">
           Order Confirmation
         </h1>

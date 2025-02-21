@@ -80,12 +80,12 @@ export default function NavBar() {
           />
         </div>
       </div>
-      <ProtectedRoute>
-        <SideBar
-          isOpen={isSidebarOpen}
-          onClose={() => setIsSidebarOpen(false)}
-        ></SideBar>
-      </ProtectedRoute>
+
+      <SideBar
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
+      ></SideBar>
+
       <Outlet />
     </>
   );

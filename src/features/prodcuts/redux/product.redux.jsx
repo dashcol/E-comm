@@ -99,9 +99,14 @@ const productSlice = createSlice({
   name: "product",
   initialState,
   reducers: {
-    addTocart: (state, action) => {
-      if (!state.cart.some((item) => item.id === action.payload.id)) {
-        state.cart.push(action.payload);
+    addToCart: (state, action) => {
+      const existingItem = state.cart.find(
+        (item) => item.id === action.payload.id
+      );
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        state.cart.push({ ...action.payload, quantity: 1 });
       }
     },
     resetCart: (state) => {
@@ -114,6 +119,13 @@ const productSlice = createSlice({
       state.orders = [...state.orders, ...state.cart];
 
       state.cart = [];
+    },
+    updateQuantity: (state, action) => {
+      const { id, amount } = action.payload;
+      const item = state.cart.find((item) => item.id === id);
+      if (item) {
+        item.quantity = Math.max(1, item.quantity + amount);
+      }
     },
   },
   extraReducers: (builder) => {

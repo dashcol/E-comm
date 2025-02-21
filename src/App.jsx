@@ -12,6 +12,8 @@ import Home from "./features/home/home";
 import { PersistGate } from "redux-persist/lib/integration/react";
 import Settings from "./features/settings/settings";
 import ThemeManager from "./features/theme/themeManger/themeManager";
+import PaymentsForm from "./features/payment-form/PaymentsForm";
+import StripeProvider from "./features/payment-form/stripe-wrapper";
 
 export default function App() {
   const router = createBrowserRouter([
@@ -20,29 +22,41 @@ export default function App() {
       element: <NavBar />,
       children: [
         { index: true, element: <Home /> },
-        { path: "/signin", element: <Signin /> },
-        { path: "/signup", element: <Signup /> },
+        { path: "signin", element: <Signin /> },
+        { path: "signup", element: <Signup /> },
+        { path: "products", element: <Products /> },
         {
-          path: "/products",
-          element: <Products />,
+          path: "cart",
+          children: [
+            {
+              index: true,
+              element: (
+                <ProtectedRoute>
+                  <Cart />
+                </ProtectedRoute>
+              ),
+            },
+            {
+              path: "payments",
+              element: (
+                <ProtectedRoute>
+                  <StripeProvider>
+                    <PaymentsForm />
+                  </StripeProvider>
+                </ProtectedRoute>
+              ),
+            },
+            {
+              path: "orders",
+              element: (
+                <ProtectedRoute>
+                  <Order />
+                </ProtectedRoute>
+              ),
+            },
+          ],
         },
-        {
-          path: "/cart",
-          element: (
-            <ProtectedRoute>
-              <Cart />
-            </ProtectedRoute>
-          ),
-        },
-        {
-          path: "/order",
-          element: (
-            <ProtectedRoute>
-              <Order />
-            </ProtectedRoute>
-          ),
-        },
-        { path: "/settings", element: <Settings /> },
+        { path: "settings", element: <Settings /> },
       ],
     },
   ]);

@@ -38,7 +38,7 @@ export default function Products() {
   };
 
   const addToCart = (product) => {
-    dispatch(productActions.addTocart(product));
+    dispatch(productActions.addToCart(product));
   };
 
   return (

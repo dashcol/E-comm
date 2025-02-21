@@ -24,7 +24,6 @@ export const userAsyncThunk = createAsyncThunk(
         return thunkAPI.rejectWithValue("Invalid Credentials");
       }
       const user = querySnapshot.docs[0].data();
-      console.log(user);
 
       return user;
     } catch (error) {
