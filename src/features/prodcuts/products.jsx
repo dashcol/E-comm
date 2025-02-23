@@ -47,7 +47,6 @@ export default function Products() {
         isDark ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"
       }`}
     >
-      {/* Search Box */}
       <div className="flex justify-center mb-6">
         <div
           className={`flex items-center rounded-lg px-4 py-2 w-full max-w-md ${
@@ -70,7 +69,7 @@ export default function Products() {
 
       <div className="flex gap-6">
         <div
-          className={`w-1/4 p-4 rounded-lg shadow-md ${
+          className={`w-1/4 p-4 rounded-lg shadow-md self-start ${
             isDark ? "bg-gray-800" : "bg-white border border-gray-300"
           }`}
         >
@@ -112,7 +111,6 @@ export default function Products() {
           </div>
         </div>
 
-        {/* Products Display */}
         <div className="w-3/4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {data.map((product, index) => (
             <div

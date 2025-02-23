@@ -3,15 +3,16 @@ import { logout, userSelector } from "../Users/redux/user.redux";
 import { useDispatch, useSelector } from "react-redux";
 import SideBar from "../sidebar/sidebar";
 import { useState } from "react";
-import ProtectedRoute from "../protect/protect";
 import { persistor } from "../../store/store";
 import { productActions } from "../prodcuts/redux/product.redux";
+import Footer from "../footer/Footer";
 
 export default function NavBar() {
   const isDark = useSelector((state) => state.theme.isDark);
   const user = useSelector(userSelector) || { isAuthenticated: false };
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { isAuthenticated } = user;
+  const { data } = useSelector(userSelector);
 
   const dispatch = useDispatch();
 
@@ -72,12 +73,21 @@ export default function NavBar() {
               />
             </NavLink>
           )}
-          <img
-            className="h-6 w-6 hover:text-gray-400"
-            alt="sidebar"
-            src="https://cdn-icons-png.flaticon.com/128/8166/8166618.png"
-            onClick={() => setIsSidebarOpen(true)}
-          />
+          {isAuthenticated ? (
+            <div
+              onClick={() => setIsSidebarOpen(true)}
+              className=" cursor-pointer flex items-center justify-center h-10 w-10 rounded-full bg-amber-500 text-white font-bold text-lg"
+            >
+              {data.name.charAt(0).toUpperCase()}
+            </div>
+          ) : (
+            <img
+              className="h-6 w-6 cursor-pointer hover:opacity-80 transition-opacity"
+              alt="sidebar"
+              src="https://cdn-icons-png.flaticon.com/128/8166/8166618.png"
+              onClick={() => setIsSidebarOpen(true)}
+            />
+          )}
         </div>
       </div>
 
@@ -87,6 +97,7 @@ export default function NavBar() {
       ></SideBar>
 
       <Outlet />
+      <Footer />
     </>
   );
 }

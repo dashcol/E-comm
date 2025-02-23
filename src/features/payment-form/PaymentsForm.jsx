@@ -2,11 +2,13 @@ import { useState } from "react";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 export default function PaymentsForm() {
   const stripe = useStripe();
   const elements = useElements();
   const navigate = useNavigate();
+  const isDark = useSelector((state) => state.theme.isDark);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -55,8 +57,16 @@ export default function PaymentsForm() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 dark:bg-gray-900">
-      <div className="bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white p-6 rounded-lg shadow-lg w-full mt-8 max-w-md">
+    <div
+      className={`min-h-screen flex items-center justify-center p-6 transition-all ${
+        isDark ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"
+      }`}
+    >
+      <div
+        className={`p-6 rounded-lg shadow-lg w-full mt-8 max-w-md transition-all ${
+          isDark ? "bg-gray-800 text-white" : "bg-white text-gray-900"
+        }`}
+      >
         <h2 className="text-2xl font-semibold text-center mb-6">
           Payment Details
         </h2>
@@ -66,9 +76,9 @@ export default function PaymentsForm() {
               style: {
                 base: {
                   fontSize: "16px",
-                  color: "#ffffff",
+                  color: isDark ? "#ffffff" : "#333333",
                   "::placeholder": {
-                    color: "#cccccc",
+                    color: isDark ? "#cccccc" : "#666666",
                   },
                 },
                 invalid: {
@@ -76,13 +86,23 @@ export default function PaymentsForm() {
                 },
               },
             }}
-            className="p-3 border rounded-md bg-gray-200 dark:bg-gray-700"
+            className={`p-3 border rounded-md transition-all ${
+              isDark
+                ? "bg-gray-700 border-gray-600"
+                : "bg-gray-200 border-gray-300"
+            }`}
           />
 
           <button
             type="submit"
             disabled={!stripe || loading}
-            className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-500 transition disabled:bg-gray-400"
+            className={`w-full py-3 rounded-lg transition-all ${
+              loading
+                ? "bg-gray-400 cursor-not-allowed"
+                : isDark
+                ? "bg-blue-500 hover:bg-blue-400"
+                : "bg-blue-600 text-white hover:bg-blue-500"
+            }`}
           >
             {loading ? "Processing..." : "Pay Now"}
           </button>

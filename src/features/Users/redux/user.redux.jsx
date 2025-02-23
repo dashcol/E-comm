@@ -1,9 +1,17 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import { db } from "../../../firebase.config/firebase.config";
 
 const initialState = {
   isAuthenticated: false,
+  email: "",
   data: null,
   loading: false,
   error: null,
@@ -46,10 +54,38 @@ export const userSignupThunk = createAsyncThunk(
   }
 );
 
+export const resetPasswordThunk = createAsyncThunk(
+  "user/resetPassword",
+  async ({ email, newPassword }, thunkAPI) => {
+    console.log(email, newPassword);
+
+    try {
+      const userRef = collection(db, "users");
+      const q = query(userRef, where("email", "==", email));
+      const querySnapshot = await getDocs(q);
+
+      if (querySnapshot.empty) {
+        return thunkAPI.rejectWithValue("User not found");
+      }
+
+      const userDoc = querySnapshot.docs[0].ref;
+      const newpass = await updateDoc(userDoc, { password: newPassword });
+      console.log(newpass);
+
+      return "Password updated successfully";
+    } catch (error) {
+      return thunkAPI.rejectWithValue("Failed to update password");
+    }
+  }
+);
+
 const userSlice = createSlice({
   name: "users",
   initialState,
   reducers: {
+    setEmail: (state, action) => {
+      state.email = action.payload;
+    },
     logout: (state) => {
       return { ...initialState };
     },
@@ -78,11 +114,20 @@ const userSlice = createSlice({
       })
       .addCase(userSignupThunk.rejected, (state, action) => {
         state.error = action.payload || "Signup failed";
+      })
+      .addCase(resetPasswordThunk.pending, (state, action) => {
+        state.loading = true;
+      })
+      .addCase(resetPasswordThunk.fulfilled, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(resetPasswordThunk.rejected, (state, action) => {
+        state.error = action.payload || "Unable to change Password";
       });
   },
 });
 
 export default userSlice.reducer;
 
-export const { logout, resetState } = userSlice.actions;
+export const { setEmail, logout, resetState } = userSlice.actions;
 export const userSelector = (state) => state.users;

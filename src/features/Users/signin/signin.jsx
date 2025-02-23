@@ -1,12 +1,18 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { resetState, userAsyncThunk, userSelector } from "../redux/user.redux";
+import {
+  resetState,
+  setEmail,
+  userAsyncThunk,
+  userSelector,
+} from "../redux/user.redux";
 
 export default function Signin() {
   const [showError, setShowError] = useState(false);
   const [users, setUser] = useState({ email: "", password: "" });
   const { error, isAuthenticated } = useSelector(userSelector);
+
   const isDark = useSelector((state) => state.theme.isDark);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -58,7 +64,10 @@ export default function Signin() {
           <input
             type="text"
             value={users.email}
-            onChange={(e) => setUser({ ...users, email: e.target.value })}
+            onChange={(e) => {
+              setUser({ ...users, email: e.target.value });
+              dispatch(setEmail(e.target.value));
+            }}
             placeholder="Email"
             className={`w-full p-3 rounded-md border focus:outline-none focus:ring-2 transition-all ${
               isDark

@@ -14,6 +14,12 @@ import Settings from "./features/settings/settings";
 import ThemeManager from "./features/theme/themeManger/themeManager";
 import PaymentsForm from "./features/payment-form/PaymentsForm";
 import StripeProvider from "./features/payment-form/stripe-wrapper";
+import ForgotPass from "./features/Users/forgot-pass/ForgotPass";
+import Profile from "./features/Profile/Profile";
+import AboutUs from "./features/aboutus/Aboutus";
+import ContactUs from "./features/contact/contact";
+import PrivacyPolicy from "./features/PrivacyPolicy/PrivacyPolicy";
+import TermsOfService from "./features/TermsOfService/TermsOfService";
 
 export default function App() {
   const router = createBrowserRouter([
@@ -22,7 +28,13 @@ export default function App() {
       element: <NavBar />,
       children: [
         { index: true, element: <Home /> },
-        { path: "signin", element: <Signin /> },
+        {
+          path: "signin",
+          children: [
+            { index: true, element: <Signin /> },
+            { path: "forgot-password", element: <ForgotPass /> },
+          ],
+        },
         { path: "signup", element: <Signup /> },
         { path: "products", element: <Products /> },
         {
@@ -57,6 +69,18 @@ export default function App() {
           ],
         },
         { path: "settings", element: <Settings /> },
+        { path: "about", element: <AboutUs /> },
+        { path: "contact", element: <ContactUs /> },
+        { path: "privacy", element: <PrivacyPolicy /> },
+        { path: "terms", element: <TermsOfService /> },
+        {
+          path: "profile",
+          element: (
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          ),
+        },
       ],
     },
   ]);
