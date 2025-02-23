@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { EyeIcon, EyeOffIcon } from "lucide-react";
 import {
   resetState,
   setEmail,
@@ -11,8 +12,9 @@ import {
 export default function Signin() {
   const [showError, setShowError] = useState(false);
   const [users, setUser] = useState({ email: "", password: "" });
-  const { error, isAuthenticated } = useSelector(userSelector);
+  const [showPassword, setShowPassword] = useState(false);
 
+  const { error, isAuthenticated } = useSelector(userSelector);
   const isDark = useSelector((state) => state.theme.isDark);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -75,16 +77,31 @@ export default function Signin() {
                 : "bg-gray-200 text-gray-900 border-gray-400 focus:ring-blue-600"
             }`}
           />
-          <input
-            type="password"
-            placeholder="Password"
-            onChange={(e) => setUser({ ...users, password: e.target.value })}
-            className={`w-full p-3 rounded-md border focus:outline-none focus:ring-2 transition-all ${
-              isDark
-                ? "bg-gray-700 text-white border-gray-600 focus:ring-blue-500"
-                : "bg-gray-200 text-gray-900 border-gray-400 focus:ring-blue-600"
-            }`}
-          />
+
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              value={users.password}
+              onChange={(e) => setUser({ ...users, password: e.target.value })}
+              className={`w-full p-3 rounded-md border focus:outline-none focus:ring-2 transition-all pr-10 ${
+                isDark
+                  ? "bg-gray-700 text-white border-gray-600 focus:ring-blue-500"
+                  : "bg-gray-200 text-gray-900 border-gray-400 focus:ring-blue-600"
+              }`}
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-300"
+            >
+              {showPassword ? (
+                <EyeOffIcon className="w-5 h-5" />
+              ) : (
+                <EyeIcon className="w-5 h-5" />
+              )}
+            </button>
+          </div>
           <button
             onClick={handleClick}
             type="submit"

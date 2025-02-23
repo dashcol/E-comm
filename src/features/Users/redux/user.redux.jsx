@@ -57,8 +57,6 @@ export const userSignupThunk = createAsyncThunk(
 export const resetPasswordThunk = createAsyncThunk(
   "user/resetPassword",
   async ({ email, newPassword }, thunkAPI) => {
-    console.log(email, newPassword);
-
     try {
       const userRef = collection(db, "users");
       const q = query(userRef, where("email", "==", email));
@@ -110,7 +108,7 @@ const userSlice = createSlice({
         state.loading = true;
       })
       .addCase(userSignupThunk.fulfilled, (state, action) => {
-        state.isAuthenticated = true;
+        state.isAuthenticated = false;
       })
       .addCase(userSignupThunk.rejected, (state, action) => {
         state.error = action.payload || "Signup failed";

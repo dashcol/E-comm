@@ -43,21 +43,28 @@ export default function Products() {
 
   return (
     <div
-      className={`min-h-screen p-6 transition-all duration-300 ${
+      className={` className="flex justify-between items-center mb-6" mt-16 min-h-screen p-6 transition-all duration-300 ${
         isDark ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"
       }`}
     >
       <div className="flex justify-center mb-6">
         <div
-          className={`flex items-center rounded-lg px-4 py-2 w-full max-w-md ${
-            isDark ? "bg-gray-800" : "bg-white border border-gray-300"
+          className={`flex items-center rounded-lg px-4 py-2 w-full max-w-sm ${
+            isDark
+              ? "bg-gray-700 text-white border border-gray-600"
+              : "bg-white text-black border border-gray-300"
           }`}
         >
           <input
-            className="bg-transparent flex-1 outline-none placeholder-gray-400"
-            placeholder="Search here..."
+            type="text"
+            value={search}
             onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search here..."
+            className={`w-full p-2 bg-transparent outline-none ${
+              isDark ? "placeholder-gray-400" : "placeholder-gray-600"
+            }`}
           />
+
           <img
             onClick={handleSearch}
             className="w-6 h-6 ml-2 cursor-pointer"
