@@ -33,7 +33,7 @@ export default function Signup() {
 
   return (
     <div
-      className={`flex justify-center items-center min-h-screen ${
+      className={`mt-8 flex justify-center items-center min-h-screen ${
         isDark ? "bg-gray-800 text-white" : "bg-gray-200 text-gray-900"
       }`}
     >
